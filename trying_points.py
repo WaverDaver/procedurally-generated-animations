@@ -38,7 +38,7 @@ def calculating_angles(pointone,pointtwo):
 color = (255,200,0)
 
 #poisition and outer radius of the point that is moved
-main_point_position = (400,300)
+main_point_position = [400,300]
 main_point_outer_radius = 100
 
 second_point_position = [300,200]
@@ -80,6 +80,22 @@ while run:
     for event in pg.event.get():
         if event.type == pg.QUIT:
             run = False
+        
+        keys = pg.key.get_pressed()
+        
+        #movement of the main point to check the constraint point
+        if keys[pg.K_LEFT]:
+            main_point_position[0] = main_point_position[0] - 20
+        
+        if keys[pg.K_RIGHT]:
+            main_point_position[0] = main_point_position[0] + 20
+        
+        if keys[pg.K_UP]:
+            main_point_position[1] = main_point_position[1] - 20
+        
+        if keys[pg.K_DOWN]:
+            main_point_position[1] = main_point_position[1] + 20
+            
     
     pg.display.update()
 
