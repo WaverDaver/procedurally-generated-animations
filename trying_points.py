@@ -8,7 +8,7 @@ screen_height = 600
 
 screen = pg.display.set_mode((screen_width,screen_height))
 
-#distance is calculated from one center to the other
+#distance is calculated from one center to the other, THIS ISN'T NEEDED, JUST CALCULATING FOR CURIOSITY
 distance = 0
 def calculating_distance(pointone, pointtwo):
     global distance
@@ -22,8 +22,8 @@ def calculating_distance_constraint_point(known_point):
     distance_constraint_point_y = known_point[1] + main_point_outer_radius * math.sin(angle_in_radians)
     distance_constraint_point_coordinate[0] = distance_constraint_point_x
     distance_constraint_point_coordinate[1] = distance_constraint_point_y
-    second_point_position[0] = distance_constraint_point_coordinate[0]
-    second_point_position[1] = distance_constraint_point_coordinate[1]
+    all_other_points[0][0] = distance_constraint_point_coordinate[0]
+    all_other_points[0][1] = distance_constraint_point_coordinate[1]
     print(distance_constraint_point_coordinate)
 
 def calculating_angles(pointone,pointtwo):
@@ -33,15 +33,16 @@ def calculating_angles(pointone,pointtwo):
     
     
     
-
+#VARIABLES
 
 color = (255,200,0)
 
 #poisition and outer radius of the point that is moved
-main_point_position = [400,300]
+main_point_position = [500,200]
 main_point_outer_radius = 100
 
-second_point_position = [300,200]
+all_other_points = [[400,200],[300,200],[200,200],[100,200]]
+num_of_points = len(all_other_points)
 
 all_points_radius = 20
 
@@ -65,16 +66,25 @@ while run:
     pg.draw.circle(screen, color, main_point_position, main_point_outer_radius, 1)
     
     # second point
-    pg.draw.circle(screen, color, second_point_position, all_points_radius, 1 )
+    pg.draw.circle(screen, color, all_other_points[0], all_points_radius, 1 )
     
     #vector connecting the first and second point
-    pg.draw.line(screen, color, main_point_position,second_point_position)
+    pg.draw.line(screen, color, main_point_position,all_other_points[0])
     
     #visualizing the constraint point
     pg.draw.circle(screen, (0,255,0), (distance_constraint_point_coordinate[0], distance_constraint_point_coordinate[1]),5)
     
-    calculating_distance(main_point_position,second_point_position)
-    calculating_angles(main_point_position,second_point_position)
+    #third,fourth,fifth points
+    pg.draw.circle(screen,color, all_other_points[0], all_points_radius, 1 )
+    pg.draw.circle(screen,color, all_other_points[1], all_points_radius, 1)
+    pg.draw.circle(screen,color, all_other_points[2], all_points_radius, 1)
+    
+    for i in all_other_points:
+        print(i)
+    
+    
+    calculating_distance(main_point_position,all_other_points[0])
+    calculating_angles(main_point_position,all_other_points[0])
     calculating_distance_constraint_point(main_point_position)
     
     for event in pg.event.get():
