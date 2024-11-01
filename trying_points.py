@@ -22,8 +22,8 @@ def calculating_distance_constraint_point(known_point):
     distance_constraint_point_y = known_point[1] + main_point_outer_radius * math.sin(angle_in_radians)
     distance_constraint_point_coordinate[0] = distance_constraint_point_x
     distance_constraint_point_coordinate[1] = distance_constraint_point_y
-    all_other_points[0][0] = distance_constraint_point_coordinate[0]
-    all_other_points[0][1] = distance_constraint_point_coordinate[1]
+    #points[1][0] = distance_constraint_point_coordinate[0]
+    #points[1][1] = distance_constraint_point_coordinate[1]
     print(distance_constraint_point_coordinate)
 
 def calculating_angles(pointone,pointtwo):
@@ -38,11 +38,9 @@ def calculating_angles(pointone,pointtwo):
 color = (255,200,0)
 
 #poisition and outer radius of the point that is moved
-main_point_position = [500,200]
 main_point_outer_radius = 100
-
-all_other_points = [[400,200],[300,200],[200,200],[100,200]]
-num_of_points = len(all_other_points)
+points = [[500,200],[400,200],[300,200],[200,200],[100,200]]
+num_of_points = len(points)
 
 all_points_radius = 20
 
@@ -60,32 +58,37 @@ while run:
     screen.fill((0,0,0))
     
     # main point
-    pg.draw.circle(screen,color,main_point_position, all_points_radius, 1)
+    pg.draw.circle(screen,color,points[0], all_points_radius, 1)
     
     #main point "radius" visualization
-    pg.draw.circle(screen, color, main_point_position, main_point_outer_radius, 1)
+    pg.draw.circle(screen, color, points[0], main_point_outer_radius, 1)
     
     # second point
-    pg.draw.circle(screen, color, all_other_points[0], all_points_radius, 1 )
+    pg.draw.circle(screen, color, points[0], all_points_radius, 1 )
     
     #vector connecting the first and second point
-    pg.draw.line(screen, color, main_point_position,all_other_points[0])
+    pg.draw.line(screen, color, points[0],points[1])
     
     #visualizing the constraint point
     pg.draw.circle(screen, (0,255,0), (distance_constraint_point_coordinate[0], distance_constraint_point_coordinate[1]),5)
     
     #third,fourth,fifth points
-    pg.draw.circle(screen,color, all_other_points[0], all_points_radius, 1 )
-    pg.draw.circle(screen,color, all_other_points[1], all_points_radius, 1)
-    pg.draw.circle(screen,color, all_other_points[2], all_points_radius, 1)
+    pg.draw.circle(screen,color, points[1], all_points_radius, 1 )
+    pg.draw.circle(screen,color, points[2], all_points_radius, 1)
+    pg.draw.circle(screen,color, points[3], all_points_radius, 1)
     
-    for i in all_other_points:
-        print(i)
+    for i in range(num_of_points - 1):
+        calculating_angles(points[i],points[i+1])
+        calculating_distance(points[i],points[i+1])
+        calculating_distance_constraint_point(points[i])
+        points[i+1][0] = distance_constraint_point_coordinate[0]
+        points[i+1][1] = distance_constraint_point_coordinate[1]
+        
     
     
-    calculating_distance(main_point_position,all_other_points[0])
-    calculating_angles(main_point_position,all_other_points[0])
-    calculating_distance_constraint_point(main_point_position)
+    #calculating_distance(points[0],points[1])
+    #calculating_angles(points[0],points[1])
+    #calculating_distance_constraint_point(points[0])
     
     for event in pg.event.get():
         if event.type == pg.QUIT:
@@ -95,16 +98,16 @@ while run:
         
         #movement of the main point to check the constraint point
         if keys[pg.K_LEFT]:
-            main_point_position[0] = main_point_position[0] - 20
+            points[0][0] = points[0][0] - 20
         
         if keys[pg.K_RIGHT]:
-            main_point_position[0] = main_point_position[0] + 20
+            points[0][0] = points[0][0] + 20
         
         if keys[pg.K_UP]:
-            main_point_position[1] = main_point_position[1] - 20
+            points[0][1] = points[0][1] - 20
         
         if keys[pg.K_DOWN]:
-            main_point_position[1] = main_point_position[1] + 20
+            points[0][1] = points[0][1] + 20
             
     
     pg.display.update()
