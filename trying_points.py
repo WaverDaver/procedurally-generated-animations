@@ -51,8 +51,8 @@ distance_constraint_point_coordinate = [0,0]
 
 #movement
 
-xspeed = 5
-yspeed = 5
+xspeed = 2
+yspeed = 2
 
 run = True
 
@@ -95,16 +95,16 @@ while run:
     points[0][1] += yspeed
     
     if points[0][0] == 800:
-        xspeed = -5
+        xspeed = -2
     
     if points[0][1] == 600:
-        yspeed = -5
+        yspeed = -2
         
     if points[0][0] == 0:
-        xspeed = 5
+        xspeed = 2
     
     if points[0][1] == 0:
-        yspeed = 5
+        yspeed = 2
         
     
     for event in pg.event.get():
