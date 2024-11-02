@@ -22,8 +22,6 @@ def calculating_distance_constraint_point(known_point):
     distance_constraint_point_y = known_point[1] + main_point_outer_radius * math.sin(angle_in_radians)
     distance_constraint_point_coordinate[0] = distance_constraint_point_x
     distance_constraint_point_coordinate[1] = distance_constraint_point_y
-    #points[1][0] = distance_constraint_point_coordinate[0]
-    #points[1][1] = distance_constraint_point_coordinate[1]
     print(distance_constraint_point_coordinate)
 
 def calculating_angles(pointone,pointtwo):
@@ -39,7 +37,7 @@ color = (255,200,0)
 
 #poisition and outer radius of the point that is moved
 main_point_outer_radius = 100
-points = [[500,200],[400,200],[300,200],[200,200],[100,200]]
+points = [[500,200],[400,200],[300,200],[200,200],[100,200], [0,200]]
 num_of_points = len(points)
 
 all_points_radius = 20
@@ -50,6 +48,11 @@ angle_in_radians = 0
 distance_constraint_point_x = 0
 distance_constraint_point_y = 0
 distance_constraint_point_coordinate = [0,0]
+
+#movement
+
+xspeed = 5
+yspeed = 5
 
 run = True
 
@@ -64,7 +67,7 @@ while run:
     pg.draw.circle(screen, color, points[0], main_point_outer_radius, 1)
     
     # second point
-    pg.draw.circle(screen, color, points[0], all_points_radius, 1 )
+    pg.draw.circle(screen, color, points[1], all_points_radius, 1 )
     
     #vector connecting the first and second point
     pg.draw.line(screen, color, points[0],points[1])
@@ -72,23 +75,37 @@ while run:
     #visualizing the constraint point
     pg.draw.circle(screen, (0,255,0), (distance_constraint_point_coordinate[0], distance_constraint_point_coordinate[1]),5)
     
-    #third,fourth,fifth points
-    pg.draw.circle(screen,color, points[1], all_points_radius, 1 )
+    #third,fourth,fifth, sixth points
     pg.draw.circle(screen,color, points[2], all_points_radius, 1)
     pg.draw.circle(screen,color, points[3], all_points_radius, 1)
+    pg.draw.circle(screen,color, points[4], all_points_radius, 1)
+    #pg.draw.circle(screen,color, points[5], all_points_radius, 1)
     
+    
+    #MAKES THE ENTIRE CHAIN CONNECTED AND FOLLOW THE MAIN POINT
+    #loops through the points list, and makes sure each point is connected to the point behind it
     for i in range(num_of_points - 1):
         calculating_angles(points[i],points[i+1])
         calculating_distance(points[i],points[i+1])
         calculating_distance_constraint_point(points[i])
         points[i+1][0] = distance_constraint_point_coordinate[0]
         points[i+1][1] = distance_constraint_point_coordinate[1]
+    
+    points[0][0] += xspeed
+    points[0][1] += yspeed
+    
+    if points[0][0] == 800:
+        xspeed = -5
+    
+    if points[0][1] == 600:
+        yspeed = -5
         
+    if points[0][0] == 0:
+        xspeed = 5
     
-    
-    #calculating_distance(points[0],points[1])
-    #calculating_angles(points[0],points[1])
-    #calculating_distance_constraint_point(points[0])
+    if points[0][1] == 0:
+        yspeed = 5
+        
     
     for event in pg.event.get():
         if event.type == pg.QUIT:
