@@ -105,8 +105,11 @@ while run:
     pg.draw.circle(screen,color, points[4], all_points_radius, 1)
     #pg.draw.circle(screen,color, points[5], all_points_radius, 1)
     
+    #makes sure the list is empty so that it doesn't pile up and try to draw the sides of the body on old positions
     all_second_parametric_points.clear()
     all_first_parametric_points.clear()
+    
+    
     #MAKES THE ENTIRE CHAIN CONNECTED AND FOLLOW THE MAIN POINT
     #loops through the points list, and makes sure each point is connected to the point behind it
     for i in range(num_of_points - 1):
@@ -125,8 +128,11 @@ while run:
                      (int(all_first_parametric_points[i][0]), int(all_first_parametric_points[i][1])), width=1   )
         pg.draw.line(screen,(255,0,0), (int(all_second_parametric_points[i - 1][0]), int(all_second_parametric_points[i - 1][1])), 
                      (int(all_second_parametric_points[i][0]), int(all_second_parametric_points[i][1])), width=1   )
-        
-    
+        if i > 0:
+            pg.draw.polygon(screen, (0,255,0), [(all_first_parametric_points[i][0], all_first_parametric_points[i][1]),
+                            (all_second_parametric_points[i][0], all_second_parametric_points[i][1]),
+                            (all_second_parametric_points[i-1][0], all_second_parametric_points[i-1][1]),
+                            (all_first_parametric_points[i-1][0], all_first_parametric_points[i-1][1])])
     
     points[0][0] += xspeed
     points[0][1] += yspeed
