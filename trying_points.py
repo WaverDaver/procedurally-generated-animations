@@ -28,10 +28,31 @@ def calculating_angles(pointone,pointtwo):
     global angle_in_radians
     angle_in_radians = math.atan2(pointtwo[1]-pointone[1],pointtwo[0]-pointone[0])
     print("Angle is: " + str(angle_in_radians))
+
+
+def parametric_equation(point):
+    global first_parametric_x, first_parametric_y, second_parametric_x, second_parametric_y
+    first_parametric_x = point[0] + all_points_radius * math.cos(angle_in_radians - 1.5708)
+    first_parametric_y = point[1] + all_points_radius * math.sin(angle_in_radians - 1.5708)
     
+    second_parametric_x = point[0] + all_points_radius * math.cos(angle_in_radians + 1.5708)
+    second_parametric_y = point[1] + all_points_radius * math.sin(angle_in_radians  + 1.5708)
+    
+    all_first_parametric_points.append([first_parametric_x, first_parametric_y])
+    all_second_parametric_points.append([second_parametric_x,second_parametric_y]) 
+    print(all_first_parametric_points)   
     
     
 #VARIABLES
+
+#points at the sides of each body part, this can be used to render the body
+first_parametric_x = 0
+first_parametric_y = 0
+second_parametric_x = 0
+second_parametric_y = 0
+
+all_first_parametric_points = []
+all_second_parametric_points = []
 
 color = (255,200,0)
 fps = 60
@@ -56,6 +77,7 @@ xspeed = 2
 yspeed = 2
 
 run = True
+
 
 while run:
     #makes sure the player isn't duplicating all over the screen
@@ -83,15 +105,28 @@ while run:
     pg.draw.circle(screen,color, points[4], all_points_radius, 1)
     #pg.draw.circle(screen,color, points[5], all_points_radius, 1)
     
-    
+    all_second_parametric_points.clear()
+    all_first_parametric_points.clear()
     #MAKES THE ENTIRE CHAIN CONNECTED AND FOLLOW THE MAIN POINT
     #loops through the points list, and makes sure each point is connected to the point behind it
     for i in range(num_of_points - 1):
+        
         calculating_angles(points[i],points[i+1])
         calculating_distance(points[i],points[i+1])
         calculating_distance_constraint_point(points[i])
         points[i+1][0] = distance_constraint_point_coordinate[0]
         points[i+1][1] = distance_constraint_point_coordinate[1]
+        
+        #this is what draws the lines connecting the parametric points to form an actual body
+        parametric_equation(points[i])
+        pg.draw.circle(screen, (255,0,0), [first_parametric_x,first_parametric_y], 5, 1)
+        pg.draw.circle(screen, (255,0,0),[second_parametric_x,second_parametric_y], 5, 1)
+        pg.draw.line(screen,(255,0,0), (int(all_first_parametric_points[i - 1][0]), int(all_first_parametric_points[i - 1][1])), 
+                     (int(all_first_parametric_points[i][0]), int(all_first_parametric_points[i][1])), width=1   )
+        pg.draw.line(screen,(255,0,0), (int(all_second_parametric_points[i - 1][0]), int(all_second_parametric_points[i - 1][1])), 
+                     (int(all_second_parametric_points[i][0]), int(all_second_parametric_points[i][1])), width=1   )
+        
+    
     
     points[0][0] += xspeed
     points[0][1] += yspeed
