@@ -30,13 +30,13 @@ def calculating_angles(pointone,pointtwo):
     print("Angle is: " + str(angle_in_radians))
 
 
-def parametric_equation(point):
+def parametric_equation(point, radius):
     global first_parametric_x, first_parametric_y, second_parametric_x, second_parametric_y
-    first_parametric_x = point[0] + all_points_radius * math.cos(angle_in_radians - 1.5708)
-    first_parametric_y = point[1] + all_points_radius * math.sin(angle_in_radians - 1.5708)
+    first_parametric_x = point[0] + radius * math.cos(angle_in_radians - 1.5708)
+    first_parametric_y = point[1] + radius * math.sin(angle_in_radians - 1.5708)
     
-    second_parametric_x = point[0] + all_points_radius * math.cos(angle_in_radians + 1.5708)
-    second_parametric_y = point[1] + all_points_radius * math.sin(angle_in_radians  + 1.5708)
+    second_parametric_x = point[0] + radius * math.cos(angle_in_radians + 1.5708)
+    second_parametric_y = point[1] + radius * math.sin(angle_in_radians  + 1.5708)
     
     all_first_parametric_points.append([first_parametric_x, first_parametric_y])
     all_second_parametric_points.append([second_parametric_x,second_parametric_y]) 
@@ -60,6 +60,8 @@ fps = 60
 #poisition and outer radius of the point that is moved
 main_point_outer_radius = 100
 points = [[500,200],[400,200],[300,200],[200,200],[100,200], [0,200]]
+radius_list = [35,25,20,20,15,10]
+
 num_of_points = len(points)
 
 all_points_radius = 20
@@ -85,13 +87,13 @@ while run:
     pg.time.Clock().tick(fps)
     
     # main point
-    pg.draw.circle(screen,color,points[0], all_points_radius, 1)
+    pg.draw.circle(screen,color,points[0], radius_list[0], 1)
     
     #main point "radius" visualization
     pg.draw.circle(screen, color, points[0], main_point_outer_radius, 1)
     
     # second point
-    pg.draw.circle(screen, color, points[1], all_points_radius, 1 )
+    pg.draw.circle(screen, color, points[1], radius_list[1], 1 )
     
     #vector connecting the first and second point
     pg.draw.line(screen, color, points[0],points[1])
@@ -100,9 +102,9 @@ while run:
     pg.draw.circle(screen, (0,255,0), (distance_constraint_point_coordinate[0], distance_constraint_point_coordinate[1]),5)
     
     #third,fourth,fifth, sixth points
-    pg.draw.circle(screen,color, points[2], all_points_radius, 1)
-    pg.draw.circle(screen,color, points[3], all_points_radius, 1)
-    pg.draw.circle(screen,color, points[4], all_points_radius, 1)
+    pg.draw.circle(screen,color, points[2], radius_list[2], 1)
+    pg.draw.circle(screen,color, points[3], radius_list[3], 1)
+    pg.draw.circle(screen,color, points[4], radius_list[4], 1)
     #pg.draw.circle(screen,color, points[5], all_points_radius, 1)
     
     #makes sure the list is empty so that it doesn't pile up and try to draw the sides of the body on old positions
@@ -121,7 +123,7 @@ while run:
         points[i+1][1] = distance_constraint_point_coordinate[1]
         
         #this is what draws the lines connecting the parametric points to form an actual body
-        parametric_equation(points[i])
+        parametric_equation(points[i],radius_list[i])
         pg.draw.circle(screen, (255,0,0), [first_parametric_x,first_parametric_y], 5, 1)
         pg.draw.circle(screen, (255,0,0),[second_parametric_x,second_parametric_y], 5, 1)
         pg.draw.line(screen,(255,0,0), (int(all_first_parametric_points[i - 1][0]), int(all_first_parametric_points[i - 1][1])), 
@@ -129,7 +131,7 @@ while run:
         pg.draw.line(screen,(255,0,0), (int(all_second_parametric_points[i - 1][0]), int(all_second_parametric_points[i - 1][1])), 
                      (int(all_second_parametric_points[i][0]), int(all_second_parametric_points[i][1])), width=1   )
         if i > 0:
-            pg.draw.polygon(screen, (0,255,0), [(all_first_parametric_points[i][0], all_first_parametric_points[i][1]),
+            pg.draw.polygon(screen, (58,124,165), [(all_first_parametric_points[i][0], all_first_parametric_points[i][1]),
                             (all_second_parametric_points[i][0], all_second_parametric_points[i][1]),
                             (all_second_parametric_points[i-1][0], all_second_parametric_points[i-1][1]),
                             (all_first_parametric_points[i-1][0], all_first_parametric_points[i-1][1])])
