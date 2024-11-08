@@ -34,6 +34,7 @@ def calculating_angles(pointone,pointtwo):
 #VARIABLES
 
 color = (255,200,0)
+fps = 60
 
 #poisition and outer radius of the point that is moved
 main_point_outer_radius = 100
@@ -58,7 +59,8 @@ run = True
 
 while run:
     #makes sure the player isn't duplicating all over the screen
-    screen.fill((0,0,0))
+    screen.fill((42, 44, 53))
+    pg.time.Clock().tick(fps)
     
     # main point
     pg.draw.circle(screen,color,points[0], all_points_radius, 1)
