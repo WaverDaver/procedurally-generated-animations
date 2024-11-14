@@ -13,7 +13,7 @@ distance = 0
 def calculating_distance(pointone, pointtwo):
     global distance
     distance = math.sqrt((pointtwo[0]-pointone[0])**2 + (pointtwo[1]-pointone[1])**2)
-    print(distance)
+    #print(distance)
 
 
 def calculating_distance_constraint_point(known_point):
@@ -22,12 +22,12 @@ def calculating_distance_constraint_point(known_point):
     distance_constraint_point_y = known_point[1] + main_point_outer_radius * math.sin(angle_in_radians)
     distance_constraint_point_coordinate[0] = distance_constraint_point_x
     distance_constraint_point_coordinate[1] = distance_constraint_point_y
-    print(distance_constraint_point_coordinate)
+    #print(distance_constraint_point_coordinate)
 
 def calculating_angles(pointone,pointtwo):
     global angle_in_radians
     angle_in_radians = math.atan2(pointtwo[1]-pointone[1],pointtwo[0]-pointone[0])
-    print("Angle is: " + str(angle_in_radians))
+    #print("Angle is: " + str(angle_in_radians))
 
 
 def parametric_equation(point, radius):
@@ -49,7 +49,7 @@ def parametric_equation(point, radius):
     
     all_first_parametric_points.append([first_parametric_x, first_parametric_y])
     all_second_parametric_points.append([second_parametric_x,second_parametric_y]) 
-    print(all_first_parametric_points)   
+    #print(all_first_parametric_points)   
     
     
 #VARIABLES
@@ -72,11 +72,14 @@ color = (255,200,0)
 fps = 60
 
 #this controls how far each body "part"/segment is from each other
-main_point_outer_radius = 35
+main_point_outer_radius = 15
+
+#NOTE TO SELF, CREATE A LOT MORE POINTS TO MAKE THE SNAKE SMOOTHER
 
 #body segment positions and body widths
 points = [[500,200],[400,200],[300,200],[200,200],[100,200], [0,200], [0,0], [0,1], [0,2], [0,5],[0,6]]
-radius_list = [35,25,20,20,15,10,10,7,7,20,10]
+radius_list = [35,37,37,33,33,32,31,30,29,28,27]
+#the second and third radiuses are bigger to make the head more outlined
 
 num_of_points = len(points)
 
@@ -93,6 +96,12 @@ xspeed = 2
 yspeed = 2
 
 run = True
+
+#button to make the snake longer
+
+button = pg.Rect(600,0,200,80)
+button_color = (0,0,155)
+
 
 
 while run:
@@ -118,7 +127,7 @@ while run:
     #MAKES THE ENTIRE CHAIN CONNECTED AND FOLLOW THE MAIN POINT
     #loops through the points list, and makes sure each point is connected to the point behind it
     for i in range(num_of_points - 1):
-        
+        num_of_points = len(points)
         calculating_angles(points[i],points[i+1])
         calculating_distance(points[i],points[i+1])
         calculating_distance_constraint_point(points[i])
@@ -148,6 +157,15 @@ while run:
                             (all_second_parametric_points[i-1][0], all_second_parametric_points[i-1][1]),
                             (all_second_parametric_points[i][0], all_second_parametric_points[i][1]),
                             (all_first_parametric_points[i][0], all_first_parametric_points[i][1])])
+        pg.draw.rect(screen, button_color, button)
+    
+    
+    #button text
+    font = pg.font.Font(None, 36)
+    button_text = font.render("LONGER SNAKE", True, (255,255,255))
+    button_rect = button_text.get_rect(center=button.center)
+    screen.blit(button_text, button_rect)
+    
     
     points[0][0] += xspeed
     points[0][1] += yspeed
@@ -171,6 +189,16 @@ while run:
         
         keys = pg.key.get_pressed()
         
+        if event.type == pg.MOUSEBUTTONDOWN:
+            if button.collidepoint(event.pos):
+                points.append([0,1])
+                latest_in_radius_list = radius_list[-1]
+                last_minus_one = latest_in_radius_list - 1
+                if last_minus_one < 5:
+                    last_minus_one = 5
+                radius_list.append(last_minus_one)
+                button_color = (255,0,0)
+                print(points)
         #movement of the main point to check the constraint point
         if keys[pg.K_LEFT]:
             points[0][0] = points[0][0] - 20
