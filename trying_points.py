@@ -32,11 +32,20 @@ def calculating_angles(pointone,pointtwo):
 
 def parametric_equation(point, radius):
     global first_parametric_x, first_parametric_y, second_parametric_x, second_parametric_y
+    global left_parametric_eyes_x, left_parametric_eyes_y, right_parametric_eyes_x, right_parametric_eyes_y
     first_parametric_x = point[0] + radius * math.cos(angle_in_radians - 1.5708)
     first_parametric_y = point[1] + radius * math.sin(angle_in_radians - 1.5708)
     
     second_parametric_x = point[0] + radius * math.cos(angle_in_radians + 1.5708)
     second_parametric_y = point[1] + radius * math.sin(angle_in_radians  + 1.5708)
+    
+    eye_radius = radius - 10
+    #for only the eyes
+    left_parametric_eyes_x = point[0] + eye_radius * math.cos(angle_in_radians - 1.5708)
+    left_parametric_eyes_y = point[1] + eye_radius * math.sin(angle_in_radians - 1.5708)
+    
+    right_parametric_eyes_x = point[0] + eye_radius * math.cos(angle_in_radians + 1.5708)
+    right_parametric_eyes_y = point[1] + eye_radius * math.sin(angle_in_radians  + 1.5708)
     
     all_first_parametric_points.append([first_parametric_x, first_parametric_y])
     all_second_parametric_points.append([second_parametric_x,second_parametric_y]) 
@@ -51,6 +60,11 @@ first_parametric_y = 0
 second_parametric_x = 0
 second_parametric_y = 0
 
+left_parametric_eyes_x = 0
+left_parametric_eyes_y = 0
+right_parametric_eyes_x = 0
+right_parametric_eyes_y = 0
+
 all_first_parametric_points = []
 all_second_parametric_points = []
 
@@ -60,9 +74,9 @@ fps = 60
 #this controls how far each body "part"/segment is from each other
 main_point_outer_radius = 35
 
-#body segment positions and radiuses
-points = [[500,200],[400,200],[300,200],[200,200],[100,200], [0,200], [0,0], [0,1], [0,2], [0,5]]
-radius_list = [35,25,20,20,10,10,7,7,7,20]
+#body segment positions and body widths
+points = [[500,200],[400,200],[300,200],[200,200],[100,200], [0,200], [0,0], [0,1], [0,2], [0,5],[0,6]]
+radius_list = [35,25,20,20,15,10,10,7,7,20,10]
 
 num_of_points = len(points)
 
@@ -93,8 +107,8 @@ while run:
     pg.draw.line(screen, color, points[0],points[1])
     
     #DRAWING ALL THE POINTS
-    for i in range(num_of_points):
-        pg.draw.circle(screen, color, points[i], radius_list[i], 1)
+    #for i in range(num_of_points-1):
+        #pg.draw.circle(screen, color, points[i], radius_list[i], 1)
     
     #makes sure the list is empty so that it doesn't pile up and try to draw the sides of the body on old positions
     all_second_parametric_points.clear()
@@ -113,12 +127,23 @@ while run:
         
         #this is what draws the lines connecting the parametric points to form an actual body
         parametric_equation(points[i],radius_list[i])
-        pg.draw.circle(screen, (255,0,0), [first_parametric_x,first_parametric_y], 5, 1)
-        pg.draw.circle(screen, (255,0,0),[second_parametric_x,second_parametric_y], 5, 1)
-        pg.draw.line(screen,(255,0,0), (int(all_first_parametric_points[i - 1][0]), int(all_first_parametric_points[i - 1][1])), 
-                     (int(all_first_parametric_points[i][0]), int(all_first_parametric_points[i][1])), width=1   )
-        pg.draw.line(screen,(255,0,0), (int(all_second_parametric_points[i - 1][0]), int(all_second_parametric_points[i - 1][1])), 
-                     (int(all_second_parametric_points[i][0]), int(all_second_parametric_points[i][1])), width=1   )
+        
+        #these two circles show the parametric points that are used to draw the polygon
+        #pg.draw.circle(screen, (255,0,0), [first_parametric_x,first_parametric_y], 5, 1)
+        #pg.draw.circle(screen, (255,0,0),[second_parametric_x,second_parametric_y], 5, 1)
+        
+        #drawing the eyes by using the very first parametric points calculated
+        if i == 0:
+            pg.draw.circle(screen, (58,124,165), points[0], radius_list[0], 100)
+            pg.draw.circle(screen, (255,255,255), [left_parametric_eyes_x,left_parametric_eyes_y], 5, 100)
+            pg.draw.circle(screen, (255,255,255),[right_parametric_eyes_x,right_parametric_eyes_y], 5, 100)
+           
+        
+        #these two lines show the lines connecting in between the parametric points for each side of the body
+        #pg.draw.line(screen,(255,0,0), (int(all_first_parametric_points[i - 1][0]), int(all_first_parametric_points[i - 1][1])), 
+         #            (int(all_first_parametric_points[i][0]), int(all_first_parametric_points[i][1])), width=1   )
+        #pg.draw.line(screen,(255,0,0), (int(all_second_parametric_points[i - 1][0]), int(all_second_parametric_points[i - 1][1])), 
+            #         (int(all_second_parametric_points[i][0]), int(all_second_parametric_points[i][1])), width=1   )
         pg.draw.polygon(screen, (58,124,165), [(all_first_parametric_points[i-1][0], all_first_parametric_points[i-1][1]),
                             (all_second_parametric_points[i-1][0], all_second_parametric_points[i-1][1]),
                             (all_second_parametric_points[i][0], all_second_parametric_points[i][1]),
