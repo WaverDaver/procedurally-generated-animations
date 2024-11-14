@@ -49,6 +49,7 @@ def parametric_equation(point, radius):
     
     all_first_parametric_points.append([first_parametric_x, first_parametric_y])
     all_second_parametric_points.append([second_parametric_x,second_parametric_y]) 
+    
     #print(all_first_parametric_points)   
     
     
@@ -73,8 +74,6 @@ fps = 60
 
 #this controls how far each body "part"/segment is from each other
 main_point_outer_radius = 15
-
-#NOTE TO SELF, CREATE A LOT MORE POINTS TO MAKE THE SNAKE SMOOTHER
 
 #body segment positions and body widths
 points = [[500,200],[400,200],[300,200],[200,200],[100,200], [0,200], [0,0], [0,1], [0,2], [0,5],[0,6]]
@@ -159,21 +158,20 @@ while run:
                             (all_first_parametric_points[i][0], all_first_parametric_points[i][1])])
         pg.draw.rect(screen, button_color, button)
     
-    
     #button text
-    font = pg.font.Font(None, 36)
+    font = pg.font.Font(None, 30)
     button_text = font.render("LONGER SNAKE", True, (255,255,255))
     button_rect = button_text.get_rect(center=button.center)
     screen.blit(button_text, button_rect)
-    
+
     
     points[0][0] += xspeed
     points[0][1] += yspeed
     
-    if points[0][0] == 800:
+    if points[0][0] == screen_width:
         xspeed = -2
     
-    if points[0][1] == 600:
+    if points[0][1] == screen_height:
         yspeed = -2
         
     if points[0][0] == 0:
